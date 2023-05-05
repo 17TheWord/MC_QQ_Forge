@@ -3,7 +3,7 @@ package com.scareye.mcqq;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -42,7 +42,7 @@ public class MCQQ {
 
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
+    public void onServerStarting(FMLServerStartingEvent event) {
         LOGGER.info("WebSocket Client 正在启动...");
         LOGGER.info("WebSocket URL: " + ConfigReader.config().get("websocket_url"));
         try {

@@ -5,7 +5,7 @@ import com.scareye.mcqq.event.ForgePlayerLoggedInEvent;
 import com.scareye.mcqq.event.ForgePlayerLoggedOutEvent;
 import com.scareye.mcqq.event.ForgeServerChatEvent;
 import com.scareye.mcqq.event.ForgeServerPlayer;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
@@ -20,16 +20,16 @@ public class Utils {
         Gson gson = new Gson();
         if (event instanceof ServerChatEvent) {
             String message = ((ServerChatEvent) event).getMessage();
-            ServerPlayer player = ((ServerChatEvent) event).getPlayer();
-            ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent(server_name, message, new ForgeServerPlayer(player.getName().getString(), player.getUUID().toString(), player.getIpAddress(), player.getLevel().toString(), player.getSpeed()));
+            ServerPlayerEntity player = ((ServerChatEvent) event).getPlayer();
+            ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent(server_name, message, new ForgeServerPlayer(player.getName().getString(), player.getStringUUID(), player.getIpAddress(), player.getLevel().toString(), player.getSpeed()));
             return gson.toJson(forgeServerChatEvent);
         } else if (event instanceof PlayerLoggedInEvent) {
-            ServerPlayer player = (ServerPlayer) ((PlayerLoggedInEvent) event).getEntity();
-            ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(server_name, new ForgeServerPlayer(player.getName().getString(), player.getUUID().toString(), player.getIpAddress(), player.getLevel().toString(), player.getSpeed()));
+            ServerPlayerEntity player = (ServerPlayerEntity) ((PlayerLoggedInEvent) event).getEntity();
+            ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(server_name, new ForgeServerPlayer(player.getName().getString(), player.getStringUUID(), player.getIpAddress(), player.getLevel().toString(), player.getSpeed()));
             return gson.toJson(forgePlayerLoggedInEvent);
         } else if (event instanceof PlayerLoggedOutEvent) {
-            ServerPlayer player = (ServerPlayer) ((PlayerLoggedOutEvent) event).getEntity();
-            ForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new ForgePlayerLoggedOutEvent(server_name, new ForgeServerPlayer(player.getName().getString(), player.getUUID().toString(), player.getIpAddress(), player.getLevel().toString(), player.getSpeed()));
+            ServerPlayerEntity player = (ServerPlayerEntity) ((PlayerLoggedOutEvent) event).getEntity();
+            ForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new ForgePlayerLoggedOutEvent(server_name, new ForgeServerPlayer(player.getName().getString(), player.getStringUUID(), player.getIpAddress(), player.getLevel().toString(), player.getSpeed()));
             return gson.toJson(forgePlayerLoggedOutEvent);
         } else {
             return null;
