@@ -6,8 +6,8 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import static com.scareye.mcqq.MCQQ.wsClient;
 import static com.scareye.mcqq.ConfigReader.config;
+import static com.scareye.mcqq.MCQQ.wsClient;
 import static com.scareye.mcqq.Utils.processEventToJson;
 
 public class EventProcessor {

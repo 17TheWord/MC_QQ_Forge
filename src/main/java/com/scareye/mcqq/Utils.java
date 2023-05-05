@@ -6,14 +6,10 @@ import com.scareye.mcqq.event.ForgePlayerLoggedOutEvent;
 import com.scareye.mcqq.event.ForgeServerChatEvent;
 import com.scareye.mcqq.event.ForgeServerPlayer;
 import net.minecraft.server.level.ServerPlayer;
-
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.eventbus.api.Event;
-
 
 import static com.scareye.mcqq.ConfigReader.config;
 

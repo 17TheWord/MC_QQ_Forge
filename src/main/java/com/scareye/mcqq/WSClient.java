@@ -6,12 +6,8 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.scareye.mcqq.MCQQ.wsClient;
-import static com.scareye.mcqq.MCQQ.LOGGER;
-import static com.scareye.mcqq.MCQQ.httpHeaders;
-import static com.scareye.mcqq.MCQQ.connectTime;
-import static com.scareye.mcqq.MCQQ.serverOpen;
 import static com.scareye.mcqq.ConfigReader.config;
+import static com.scareye.mcqq.MCQQ.*;
 
 public class WSClient extends WebSocketClient {
 
