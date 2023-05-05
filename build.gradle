@@ -7,7 +7,7 @@ group = 'com.scareye.mcqq'
 version = '1.1.5'
 
 java {
-    archivesBaseName = 'mcqq'
+    archivesBaseName = 'MC_QQ_Forge'
     toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
