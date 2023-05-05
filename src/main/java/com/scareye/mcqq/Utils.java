@@ -19,7 +19,7 @@ public class Utils {
         String server_name = config().get("server_name").toString();
         Gson gson = new Gson();
         if (event instanceof ServerChatEvent) {
-            String message = ((ServerChatEvent) event).getMessage().getString();
+            String message = ((ServerChatEvent) event).getMessage();
             ServerPlayer player = ((ServerChatEvent) event).getPlayer();
             ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent(server_name, message, new ForgeServerPlayer(player.getName().getString(), player.getUUID().toString(), player.getIpAddress(), player.getLevel().toString(), player.getSpeed()));
             return gson.toJson(forgeServerChatEvent);
