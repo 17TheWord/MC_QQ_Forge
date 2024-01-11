@@ -51,7 +51,7 @@ public class Utils {
 
         forgeServerPlayer.setUuid(player.getUUID().toString());
         forgeServerPlayer.setIpAddress(player.getIpAddress());
-        forgeServerPlayer.setLevel(player.getLevel().toString());
+        forgeServerPlayer.setLevel(player.level().toString());
         forgeServerPlayer.setSpeed(player.getSpeed());
         forgeServerPlayer.setGameMode(player.gameMode.getGameModeForPlayer().toString());
         forgeServerPlayer.setBlockX(player.getBlockX());
