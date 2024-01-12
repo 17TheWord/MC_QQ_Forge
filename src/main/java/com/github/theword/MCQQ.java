@@ -1,9 +1,11 @@
 package com.github.theword;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -27,6 +29,8 @@ public class MCQQ {
     static int connectTime;
     static boolean serverOpen;
 
+    static MinecraftServer server;
+
     public MCQQ() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onStartup);
         MinecraftForge.EVENT_BUS.register(this);
@@ -45,11 +49,20 @@ public class MCQQ {
     public void onServerStarting(ServerStartingEvent event) {
         LOGGER.info("WebSocket Client 正在启动...");
         LOGGER.info("WebSocket URL: " + ConfigReader.config().get("websocket_url"));
+        server = event.getServer();
         try {
             wsClient = new WSClient();
             wsClient.connect();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            LOGGER.error("WebSocket URL 格式错误，请检查配置文件。");
         }
+    }
+
+    @OnlyIn(Dist.DEDICATED_SERVER)
+    @SubscribeEvent
+    public void onServerStopping(ServerStoppingEvent event) {
+        LOGGER.info("WebSocket Client 正在关闭...");
+        serverOpen = false;
+        wsClient.close();
     }
 }
