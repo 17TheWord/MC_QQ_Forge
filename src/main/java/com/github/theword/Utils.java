@@ -2,8 +2,16 @@ package com.github.theword;
 
 import com.github.theword.event.ForgeEvent;
 import com.github.theword.event.ForgeServerPlayer;
+import com.github.theword.returnBody.BaseReturnBody;
+import com.github.theword.returnBody.MessageReturnBody;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+
+import static com.github.theword.MCQQ.LOGGER;
+import static com.github.theword.MCQQ.server;
+import static com.github.theword.parse.ParseJsonToEvent.parseMessageToText;
 
 public class Utils {
 
@@ -66,5 +74,27 @@ public class Utils {
         forgeServerPlayer.setFlyingSpeed(player.getAbilities().getFlyingSpeed());
 
         return forgeServerPlayer;
+    }
+
+    /**
+     * 来自 NoneBot 的 JSON 消息的处理
+     */
+    static void parseWebSocketJson(String message) {
+        // 组合消息
+        Gson gson = new Gson();
+        BaseReturnBody baseReturnBody = gson.fromJson(message, BaseReturnBody.class);
+        JsonElement data = baseReturnBody.getData();
+        switch (baseReturnBody.getApi()) {
+            case "broadcast":
+                MessageReturnBody messageList = gson.fromJson(data, MessageReturnBody.class);
+                String result = parseMessageToText(messageList.getMessageList());
+                for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
+                    serverPlayer.sendSystemMessage(Component.literal(result));
+                }
+                break;
+            default:
+                LOGGER.warn("未知的 API: " + baseReturnBody.getApi());
+                break;
+        }
     }
 }
