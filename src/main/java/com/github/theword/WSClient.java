@@ -6,6 +6,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static com.github.theword.ConfigReader.config;
 import static com.github.theword.MCQQ.wsClient;
 import static com.github.theword.MCQQ.LOGGER;
 import static com.github.theword.MCQQ.httpHeaders;
@@ -17,7 +18,7 @@ public class WSClient extends WebSocketClient {
 
 
     public WSClient() throws URISyntaxException {
-        super(new URI((String) ConfigReader.config().get("websocket_url")), httpHeaders);
+        super(new URI((String) config().get("websocket_url")), httpHeaders);
     }
 
     /**
@@ -67,7 +68,9 @@ public class WSClient extends WebSocketClient {
     public void onError(Exception exception) {
         if (serverOpen && wsClient != null) {
             connectTime++;
-            LOGGER.info("WebSocket 连接已断开,正在第 " + connectTime + " 次重新连接至" + ConfigReader.config().get("websocket_url"));
+            if ((Boolean) config().get("enable_reconnect_msg")) {
+                LOGGER.info("WebSocket 连接已断开,正在第 " + connectTime + " 次重新连接至" + config().get("websocket_url"));
+            }
             try {
                 wsClient = new WSClient();
                 Thread.sleep(3000);
