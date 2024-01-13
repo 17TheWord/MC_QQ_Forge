@@ -39,7 +39,7 @@ public class EventProcessor {
     @SubscribeEvent
     public void onPlayerQuit(PlayerLoggedOutEvent event) {
         if ((Boolean) configMap.get("join_quit") && !event.isCanceled()) {
-            ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(getPlayer((ServerPlayer) event.getEntity()));
+            ForgePlayerLoggedOutEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedOutEvent(getPlayer((ServerPlayer) event.getEntity()));
             wsClient.sendMessage(getEventJson(forgePlayerLoggedInEvent));
         }
     }
