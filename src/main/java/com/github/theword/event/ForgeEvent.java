@@ -2,12 +2,12 @@ package com.github.theword.event;
 
 import com.google.gson.annotations.SerializedName;
 
-import static com.github.theword.ConfigReader.config;
+import static com.github.theword.ConfigReader.configMap;
 
 
 public class ForgeEvent {
     @SerializedName("server_name")
-    private final String serverName = (String) config().get("server_name");
+    private final String serverName = (String) configMap.get("server_name");
     @SerializedName("event_name")
     private final String eventName;
     @SerializedName("post_type")

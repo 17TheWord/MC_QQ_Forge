@@ -17,6 +17,10 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.github.theword.ConfigReader.configMap;
+import static com.github.theword.ConfigReader.loadConfig;
+import static com.github.theword.Utils.unicodeEncode;
+
 @Mod(MCQQ.MOD_ID)
 public class MCQQ {
 
@@ -32,23 +36,19 @@ public class MCQQ {
     static MinecraftServer server;
 
     public MCQQ() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onStartup);
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new EventProcessor());
-    }
-
-    private void onStartup(final FMLCommonSetupEvent event) {
-        LOGGER.info("正在读取配置文件...");
-        httpHeaders.put("x-self-name", Utils.unicodeEncode(ConfigReader.config().get("server_name").toString()));
-        connectTime = 0;
-        serverOpen = true;
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
+        loadConfig();
+        connectTime = 0;
+        serverOpen = true;
+        httpHeaders.put("x-self-name", unicodeEncode(configMap.get("server_name").toString()));
         LOGGER.info("WebSocket Client 正在启动...");
-        LOGGER.info("WebSocket URL: " + ConfigReader.config().get("websocket_url"));
+        LOGGER.info("WebSocket URL: " + configMap.get("websocket_url"));
         server = event.getServer();
         try {
             wsClient = new WSClient();

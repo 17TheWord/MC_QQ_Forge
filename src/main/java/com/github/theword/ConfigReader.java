@@ -13,18 +13,18 @@ import java.util.Map;
 import static com.github.theword.MCQQ.LOGGER;
 
 public class ConfigReader {
-    public static Map<String, Object> config() {
-        // 检查配置文件是否存在，如果不存在则从资源文件中复制过去
-        Path configMapFilePath = Paths.get("./mods", "mcqq", "config.yml");
+    public static Map<String, Object> configMap = new HashMap<>();
 
-        Map<String, Object> configMap;
+    public static void loadConfig() {
+        Path configMapFilePath = Paths.get("./mods", "mcqq", "config.yml");
         if (!Files.exists(configMapFilePath)) {
+            LOGGER.info("配置文件不存在，将自动生成");
             try {
                 InputStream inputStream = MCQQ.class.getClassLoader().getResourceAsStream("config.yml");
                 assert inputStream != null;
                 FileUtils.copyInputStreamToFile(inputStream, configMapFilePath.toFile());
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("生成配置文件失败");
             }
         }
 
@@ -33,10 +33,9 @@ public class ConfigReader {
             Yaml yaml = new Yaml();
             Reader reader = Files.newBufferedReader(configMapFilePath);
             configMap = yaml.load(reader);
-            return configMap;
+            LOGGER.info("加载配置文件成功");
         } catch (IOException e) {
             LOGGER.info("读取配置文件失败，将采用默认值");
-            configMap = new HashMap<>();
             configMap.put("enable_mc_qq", true);
             configMap.put("enable_reconnect_msg", true);
             configMap.put("websocket_url", "ws://127.0.0.1:8080/minecraft/ws");
@@ -47,7 +46,6 @@ public class ConfigReader {
             configMap.put("server_name", "Server");
             configMap.put("log_local", ".\\logs\\");
             configMap.put("log_name", "latest.log");
-            return configMap;
         }
     }
 }

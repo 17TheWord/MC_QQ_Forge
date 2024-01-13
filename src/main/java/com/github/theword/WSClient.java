@@ -6,7 +6,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.github.theword.ConfigReader.config;
+import static com.github.theword.ConfigReader.configMap;
 import static com.github.theword.MCQQ.wsClient;
 import static com.github.theword.MCQQ.LOGGER;
 import static com.github.theword.MCQQ.httpHeaders;
@@ -18,7 +18,7 @@ public class WSClient extends WebSocketClient {
 
 
     public WSClient() throws URISyntaxException {
-        super(new URI((String) config().get("websocket_url")), httpHeaders);
+        super(new URI((String) configMap.get("websocket_url")), httpHeaders);
     }
 
     /**
@@ -38,7 +38,7 @@ public class WSClient extends WebSocketClient {
      */
     @Override
     public void onMessage(String message) {
-        if ((Boolean) config().get("enable_mc_qq")) {
+        if ((Boolean) configMap.get("enable_mc_qq")) {
             try {
                 parseWebSocketJson(message);
             } catch (Exception e) {
@@ -70,8 +70,8 @@ public class WSClient extends WebSocketClient {
     public void onError(Exception exception) {
         if (serverOpen && wsClient != null) {
             connectTime++;
-            if ((Boolean) config().get("enable_reconnect_msg")) {
-                LOGGER.info("WebSocket 连接已断开,正在第 " + connectTime + " 次重新连接至" + config().get("websocket_url"));
+            if ((Boolean) configMap.get("enable_reconnect_msg")) {
+                LOGGER.info("WebSocket 连接已断开,正在第 " + connectTime + " 次重新连接至" + configMap.get("websocket_url"));
             }
             try {
                 wsClient = new WSClient();
@@ -91,7 +91,7 @@ public class WSClient extends WebSocketClient {
      * @param message 消息
      */
     public void sendMessage(String message) {
-        if (serverOpen && wsClient.isOpen() && (Boolean) config().get("enable_mc_qq")) {
+        if (serverOpen && wsClient.isOpen() && (Boolean) configMap.get("enable_mc_qq")) {
             wsClient.send(message);
         } else {
             LOGGER.info("发送消息失败，没有连接到 WebSocket 服务器。");

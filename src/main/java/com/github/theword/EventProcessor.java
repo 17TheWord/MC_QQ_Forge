@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.Objects;
 
+import static com.github.theword.ConfigReader.configMap;
 import static com.github.theword.MCQQ.wsClient;
 import static com.github.theword.Utils.getEventJson;
 import static com.github.theword.Utils.getPlayer;
@@ -29,7 +30,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerLoggedInEvent event) {
-        if ((Boolean) ConfigReader.config().get("join_quit") && !event.isCanceled()) {
+        if ((Boolean) configMap.get("join_quit") && !event.isCanceled()) {
             ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(getPlayer((ServerPlayer) event.getEntity()));
             wsClient.sendMessage(getEventJson(forgePlayerLoggedInEvent));
         }
@@ -37,7 +38,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerQuit(PlayerLoggedOutEvent event) {
-        if ((Boolean) ConfigReader.config().get("join_quit") && !event.isCanceled()) {
+        if ((Boolean) configMap.get("join_quit") && !event.isCanceled()) {
             ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(getPlayer((ServerPlayer) event.getEntity()));
             wsClient.sendMessage(getEventJson(forgePlayerLoggedInEvent));
         }
@@ -45,7 +46,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
-        if ((Boolean) ConfigReader.config().get("command_message") && !event.isCanceled()) {
+        if ((Boolean) configMap.get("command_message") && !event.isCanceled()) {
             if (event.getParseResults().getContext().getSource().isPlayer()) {
                 String command = event.getParseResults().getReader().getString();
 
@@ -60,7 +61,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
-        if ((Boolean) ConfigReader.config().get("death_message") && !event.isCanceled()) {
+        if ((Boolean) configMap.get("death_message") && !event.isCanceled()) {
             if (event.getEntity() instanceof ServerPlayer) {
                 ForgeServerPlayer player = getPlayer((ServerPlayer) event.getEntity());
                 ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, event.getSource().getLocalizedDeathMessage(event.getEntity()).getString());
