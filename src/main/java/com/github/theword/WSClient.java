@@ -38,22 +38,24 @@ public class WSClient extends WebSocketClient {
      */
     @Override
     public void onMessage(String message) {
-        try {
-            parseWebSocketJson(message);
-        } catch (Exception e) {
-            LOGGER.error("解析消息时出现错误：" + message);
+        if ((Boolean) config().get("enable_mc_qq")) {
+            try {
+                parseWebSocketJson(message);
+            } catch (Exception e) {
+                LOGGER.error("解析消息时出现错误：" + message);
+            }
         }
     }
 
     /**
      * 关闭时
      *
-     * @param i 关闭码
-     * @param s 关闭信息
-     * @param b 是否关闭
+     * @param code   关闭码
+     * @param reason 关闭信息
+     * @param remote 是否关闭
      */
     @Override
-    public void onClose(int i, String s, boolean b) {
+    public void onClose(int code, String reason, boolean remote) {
         if (serverOpen && wsClient != null) {
             wsClient.sendPing();
         }
