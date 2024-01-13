@@ -21,7 +21,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
-        if ((Boolean) ConfigReader.config().get("enable_mc_qq") && !event.isCanceled()) {
+        if (!event.isCanceled()) {
             ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", getPlayer(event.getPlayer()), event.getMessage().getString());
             wsClient.sendMessage(getEventJson(forgeServerChatEvent));
         }

@@ -91,7 +91,7 @@ public class WSClient extends WebSocketClient {
      * @param message 消息
      */
     public void sendMessage(String message) {
-        if (wsClient.isOpen()) {
+        if (serverOpen && wsClient.isOpen() && (Boolean) config().get("enable_mc_qq")) {
             wsClient.send(message);
         } else {
             LOGGER.info("发送消息失败，没有连接到 WebSocket 服务器。");
