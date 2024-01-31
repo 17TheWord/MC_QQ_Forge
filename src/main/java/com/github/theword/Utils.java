@@ -6,12 +6,12 @@ import com.github.theword.returnBody.BaseReturnBody;
 import com.github.theword.returnBody.MessageReturnBody;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 import static com.github.theword.MCQQ.LOGGER;
 import static com.github.theword.MCQQ.server;
-import static com.github.theword.parse.ParseJsonToEvent.parseMessageToText;
+import static com.github.theword.parse.ParseJsonToEvent.parseMessages;
 
 public class Utils {
 
@@ -87,9 +87,9 @@ public class Utils {
         switch (baseReturnBody.getApi()) {
             case "broadcast":
                 MessageReturnBody messageList = gson.fromJson(data, MessageReturnBody.class);
-                String result = parseMessageToText(messageList.getMessageList());
+                MutableComponent result = parseMessages(messageList.getMessageList());
                 for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
-                    serverPlayer.sendSystemMessage(Component.literal(result));
+                    serverPlayer.sendSystemMessage(result);
                 }
                 break;
             default:

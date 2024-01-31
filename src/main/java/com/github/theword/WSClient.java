@@ -43,6 +43,7 @@ public class WSClient extends WebSocketClient {
                 parseWebSocketJson(message);
             } catch (Exception e) {
                 LOGGER.error("解析消息时出现错误：" + message);
+                e.printStackTrace();
             }
         }
     }
