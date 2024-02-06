@@ -3,25 +3,22 @@ package com.github.theword.parse;
 import com.github.theword.returnBody.returnModle.MyBaseComponent;
 import com.github.theword.returnBody.returnModle.MyTextComponent;
 import net.minecraft.network.chat.*;
-import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
 public class ParseJsonToEvent {
-    public static MutableComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
-        MutableComponent mutableComponent = parsePerMessageToMultiText(myBaseComponentList.get(0));
+    public static TextComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
+        TextComponent textComponent = parsePerMessageToMultiText(myBaseComponentList.get(0));
         for (int i = 1; i < myBaseComponentList.size(); i++) {
             MyBaseComponent myBaseComponent = myBaseComponentList.get(i);
-            MutableComponent tempMutableComponent = parsePerMessageToMultiText(myBaseComponent);
-            mutableComponent.append(tempMutableComponent);
+            TextComponent tempMutableComponent = parsePerMessageToMultiText(myBaseComponent);
+            textComponent.append(tempMutableComponent);
         }
-        return mutableComponent;
+        return textComponent;
     }
 
-    public static MutableComponent parsePerMessageToMultiText(MyBaseComponent myBaseComponent) {
-        LiteralContents literalContents = new LiteralContents(myBaseComponent.getText());
-
+    public static TextComponent parsePerMessageToMultiText(MyBaseComponent myBaseComponent) {
         ResourceLocation font = null;
         if (myBaseComponent.getFont() != null) {
             font = new ResourceLocation(myBaseComponent.getFont());
@@ -65,9 +62,9 @@ public class ParseJsonToEvent {
                 style = style.withHoverEvent(hoverEvent);
             }
         }
-        MutableComponent mutableComponent = MutableComponent.create(literalContents);
-        mutableComponent.setStyle(style);
+        TextComponent textComponent = new TextComponent(myBaseComponent.getText());
+        textComponent.setStyle(style);
 
-        return mutableComponent;
+        return textComponent;
     }
 }

@@ -6,6 +6,8 @@ import com.github.theword.returnBody.BaseReturnBody;
 import com.github.theword.returnBody.MessageReturnBody;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import net.minecraft.Util;
+import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -86,7 +88,7 @@ public class Utils {
                 MessageReturnBody messageList = gson.fromJson(data, MessageReturnBody.class);
                 MutableComponent result = parseMessages(messageList.getMessageList());
                 for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
-                    serverPlayer.sendSystemMessage(result);
+                    serverPlayer.sendMessage(result, ChatType.SYSTEM, Util.NIL_UUID);
                 }
                 break;
             default:
