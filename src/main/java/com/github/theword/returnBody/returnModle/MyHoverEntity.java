@@ -4,4 +4,7 @@ import lombok.Data;
 
 @Data
 public class MyHoverEntity {
+    String type;
+    String id;
+    String name;
 }
