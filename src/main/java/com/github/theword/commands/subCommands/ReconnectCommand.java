@@ -40,7 +40,7 @@ public class ReconnectCommand extends SubCommand {
             wsClientList.forEach(wsClient -> {
                 if (!wsClient.isOpen()) {
                     wsClient.reconnectWebsocket();
-                    sendResultComponent(context, CommandConstantMessage.RECONNECT_MESSAGE.formatted(wsClient.getURI()));
+                    sendResultComponent(context, String.format(CommandConstantMessage.RECONNECT_MESSAGE, wsClient.getURI()));
                 } else {
                     opened.getAndIncrement();
                 }
@@ -54,7 +54,7 @@ public class ReconnectCommand extends SubCommand {
             sendResultComponent(context, CommandConstantMessage.RECONNECT_ALL_CLIENT);
             wsClientList.forEach(wsClient -> {
                 wsClient.reconnectWebsocket();
-                sendResultComponent(context, CommandConstantMessage.RECONNECT_MESSAGE.formatted(wsClient.getURI()));
+                sendResultComponent(context, String.format(CommandConstantMessage.RECONNECT_MESSAGE, wsClient.getURI()));
             });
             sendResultComponent(context, CommandConstantMessage.RECONNECTED);
             return Command.SINGLE_SUCCESS;

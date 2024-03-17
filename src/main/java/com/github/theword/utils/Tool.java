@@ -6,8 +6,7 @@ import com.github.theword.models.ForgeServerPlayer;
 import com.google.gson.Gson;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 import static com.github.theword.MCQQ.*;
@@ -58,19 +57,19 @@ public class Tool {
 
         forgeServerPlayer.setUuid(player.getUUID().toString());
         forgeServerPlayer.setIpAddress(player.getIpAddress());
-        forgeServerPlayer.setLevel(player.level().toString());
+        forgeServerPlayer.setLevel(player.getLevel().toString());
         forgeServerPlayer.setSpeed(player.getSpeed());
         forgeServerPlayer.setGameMode(player.gameMode.getGameModeForPlayer().toString());
-        forgeServerPlayer.setBlockX(player.getBlockX());
-        forgeServerPlayer.setBlockY(player.getBlockY());
-        forgeServerPlayer.setBlockZ(player.getBlockZ());
+        forgeServerPlayer.setBlockX((int) player.getX());
+        forgeServerPlayer.setBlockY((int) player.getY());
+        forgeServerPlayer.setBlockZ((int) player.getZ());
 
         forgeServerPlayer.setSwimming(player.isSwimming());
         forgeServerPlayer.setSleeping(player.isSleeping());
         forgeServerPlayer.setBlocking(player.isBlocking());
 
-        forgeServerPlayer.setFlying(player.getAbilities().flying);
-        forgeServerPlayer.setFlyingSpeed(player.getAbilities().getFlyingSpeed());
+        forgeServerPlayer.setFlying(player.isFallFlying());
+        forgeServerPlayer.setFlyingSpeed(player.flyingSpeed);
 
         return forgeServerPlayer;
     }
@@ -90,6 +89,6 @@ public class Tool {
     }
 
     public static void sendResultComponent(CommandContext<CommandSourceStack> context, String text) {
-        context.getSource().sendSystemMessage(MutableComponent.create(new LiteralContents(text)));
+        context.getSource().sendSuccess(new TextComponent(text), false);
     }
 }

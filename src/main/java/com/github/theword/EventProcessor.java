@@ -3,6 +3,7 @@ package com.github.theword;
 
 import com.github.theword.models.*;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -20,7 +21,7 @@ public class EventProcessor {
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
         if (config.isEnableChatMessage()) {
-            ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", getPlayer(event.getPlayer()), event.getMessage().getString());
+            ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", getPlayer(event.getPlayer()), event.getMessage());
             sendMessage(getEventJson(forgeServerChatEvent));
         }
     }
@@ -28,7 +29,7 @@ public class EventProcessor {
     @SubscribeEvent
     public void onPlayerJoin(PlayerLoggedInEvent event) {
         if (config.isEnableJoinMessage() && !event.isCanceled()) {
-            ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(getPlayer((ServerPlayer) event.getEntity()));
+            ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(getPlayer((ServerPlayer) event.getPlayer()));
             sendMessage(getEventJson(forgePlayerLoggedInEvent));
         }
     }
@@ -36,7 +37,7 @@ public class EventProcessor {
     @SubscribeEvent
     public void onPlayerQuit(PlayerLoggedOutEvent event) {
         if (config.isEnableQuitMessage() && !event.isCanceled()) {
-            ForgePlayerLoggedOutEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedOutEvent(getPlayer((ServerPlayer) event.getEntity()));
+            ForgePlayerLoggedOutEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedOutEvent(getPlayer((ServerPlayer) event.getPlayer()));
             sendMessage(getEventJson(forgePlayerLoggedInEvent));
         }
     }
@@ -44,11 +45,11 @@ public class EventProcessor {
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
         if (config.isEnableCommandMessage() && !event.isCanceled()) {
-            if (event.getParseResults().getContext().getSource().isPlayer()) {
+            if (event.getParseResults().getContext().getSource().getEntity() instanceof ServerPlayer) {
                 String command = event.getParseResults().getReader().getString();
 
                 if (!command.startsWith("l ") && !command.startsWith("login ") && !command.startsWith("register ") && !command.startsWith("reg ") && !command.startsWith("mcqq ")) {
-                    ForgeServerPlayer player = getPlayer(Objects.requireNonNull(event.getParseResults().getContext().getSource().getPlayer()));
+                    ForgeServerPlayer player = getPlayer((ServerPlayer) Objects.requireNonNull(event.getParseResults().getContext().getSource().getEntity()));
                     ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
                     sendMessage(getEventJson(forgeCommandEvent));
                 }
@@ -61,7 +62,7 @@ public class EventProcessor {
         if (config.isEnableDeathMessage() && !event.isCanceled()) {
             if (event.getEntity() instanceof ServerPlayer) {
                 ForgeServerPlayer player = getPlayer((ServerPlayer) event.getEntity());
-                ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, event.getSource().getLocalizedDeathMessage(event.getEntity()).getString());
+                ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, event.getSource().getLocalizedDeathMessage((LivingEntity) event.getEntity()).getString());
                 sendMessage(getEventJson(forgeCommandEvent));
             }
         }

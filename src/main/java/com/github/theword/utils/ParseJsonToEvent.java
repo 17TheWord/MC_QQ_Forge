@@ -1,10 +1,11 @@
 package com.github.theword.utils;
 
 import com.github.theword.returnBody.returnModle.MyBaseComponent;
+import com.github.theword.returnBody.returnModle.MyHoverItem;
 import com.github.theword.returnBody.returnModle.MyTextComponent;
 import net.minecraft.network.chat.*;
-import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class ParseJsonToEvent {
     }
 
     public MutableComponent parsePerMessageToMultiText(MyBaseComponent myBaseComponent) {
-        LiteralContents literalContents = new LiteralContents(myBaseComponent.getText());
+        TextComponent stringTextComponent = new TextComponent(myBaseComponent.getText());
 
         ResourceLocation font = null;
         if (myBaseComponent.getFont() != null) {
@@ -54,7 +55,7 @@ public class ParseJsonToEvent {
                         }
                         break;
                     case "show_item":
-//                            hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ITEM, new Item());
+//                        hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ITEM, new Item());
                         break;
                     case "show_entity":
 //                            hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new Entity());
@@ -65,9 +66,8 @@ public class ParseJsonToEvent {
                 style = style.withHoverEvent(hoverEvent);
             }
         }
-        MutableComponent mutableComponent = MutableComponent.create(literalContents);
-        mutableComponent.setStyle(style);
+        stringTextComponent.setStyle(style);
 
-        return mutableComponent;
+        return stringTextComponent;
     }
 }
