@@ -3,8 +3,8 @@ package com.github.theword.commands.subCommands;
 import com.github.theword.commands.SubCommand;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
 
 import static com.github.theword.commands.CommandManager.subCommandList;
 import static com.github.theword.utils.Tool.sendResultComponent;
@@ -30,7 +30,7 @@ public class HelpCommand extends SubCommand {
         return "使用：/mcqq";
     }
 
-    public HelpCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public HelpCommand(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register(Commands.literal("mcqq")
                 .requires(source -> source.hasPermission(2))
                 .executes(

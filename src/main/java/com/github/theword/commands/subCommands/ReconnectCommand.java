@@ -4,8 +4,8 @@ import com.github.theword.commands.SubCommand;
 import com.github.theword.constant.CommandConstantMessage;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,14 +33,14 @@ public class ReconnectCommand extends SubCommand {
         return "使用：/mcqq reconnect [all]";
     }
 
-    public ReconnectCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public ReconnectCommand(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register(Commands.literal("mcqq").requires(source -> source.hasPermission(2)).then(Commands.literal("reconnect").executes(context -> {
             sendResultComponent(context, CommandConstantMessage.RECONNECT_NOT_OPEN_CLIENT);
             AtomicInteger opened = new AtomicInteger();
             wsClientList.forEach(wsClient -> {
                 if (!wsClient.isOpen()) {
                     wsClient.reconnectWebsocket();
-                    sendResultComponent(context, CommandConstantMessage.RECONNECT_MESSAGE.formatted(wsClient.getURI()));
+                    sendResultComponent(context, String.format(CommandConstantMessage.RECONNECT_MESSAGE, wsClient.getURI()));
                 } else {
                     opened.getAndIncrement();
                 }
@@ -54,7 +54,7 @@ public class ReconnectCommand extends SubCommand {
             sendResultComponent(context, CommandConstantMessage.RECONNECT_ALL_CLIENT);
             wsClientList.forEach(wsClient -> {
                 wsClient.reconnectWebsocket();
-                sendResultComponent(context, CommandConstantMessage.RECONNECT_MESSAGE.formatted(wsClient.getURI()));
+                sendResultComponent(context, String.format(CommandConstantMessage.RECONNECT_MESSAGE, wsClient.getURI()));
             });
             sendResultComponent(context, CommandConstantMessage.RECONNECTED);
             return Command.SINGLE_SUCCESS;

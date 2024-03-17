@@ -7,8 +7,8 @@ import com.github.theword.constant.CommandConstantMessage;
 import com.github.theword.constant.WebsocketConstantMessage;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
 
 import java.net.URISyntaxException;
 
@@ -39,14 +39,14 @@ public class ReloadCommand extends SubCommand {
     }
 
 
-    public ReloadCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public ReloadCommand(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register(Commands.literal("mcqq").requires(source -> source.hasPermission(2)).then(Commands.literal("reload").executes(context -> {
             config = new Config(true);
             sendResultComponent(context, CommandConstantMessage.RELOAD_CONFIG);
             wsClientList.forEach(wsClient -> {
                 if (!wsClient.isClosed() && !wsClient.isClosing()) {
                     wsClient.close();
-                    sendResultComponent(context, CommandConstantMessage.RELOAD_CLOSE_WEBSOCKET_CLIENT.formatted(wsClient.getURI()));
+                    sendResultComponent(context, String.format(CommandConstantMessage.RELOAD_CLOSE_WEBSOCKET_CLIENT, wsClient.getURI()));
                 }
                 wsClient.getTimer().cancel();
             });
@@ -58,7 +58,7 @@ public class ReloadCommand extends SubCommand {
                     wsClient.connect();
                     wsClientList.add(wsClient);
                 } catch (URISyntaxException e) {
-                    sendResultComponent(context, WebsocketConstantMessage.WEBSOCKET_ERROR_URI_SYNTAX_ERROR.formatted(websocketUrl));
+                    sendResultComponent(context, String.format(WebsocketConstantMessage.WEBSOCKET_ERROR_URI_SYNTAX_ERROR, websocketUrl));
                 }
             });
             sendResultComponent(context, CommandConstantMessage.RELOADED);

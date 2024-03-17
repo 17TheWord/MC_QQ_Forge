@@ -2,25 +2,28 @@ package com.github.theword.utils;
 
 import com.github.theword.returnBody.returnModle.MyBaseComponent;
 import com.github.theword.returnBody.returnModle.MyTextComponent;
-import net.minecraft.network.chat.*;
-import net.minecraft.network.chat.contents.LiteralContents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 
 import java.util.List;
 
 public class ParseJsonToEvent {
-    public MutableComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
-        MutableComponent mutableComponent = parsePerMessageToMultiText(myBaseComponentList.get(0));
+    public StringTextComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
+        StringTextComponent mutableComponent = parsePerMessageToMultiText(myBaseComponentList.get(0));
         for (int i = 1; i < myBaseComponentList.size(); i++) {
             MyBaseComponent myBaseComponent = myBaseComponentList.get(i);
-            MutableComponent tempMutableComponent = parsePerMessageToMultiText(myBaseComponent);
+            StringTextComponent tempMutableComponent = parsePerMessageToMultiText(myBaseComponent);
             mutableComponent.append(tempMutableComponent);
         }
         return mutableComponent;
     }
 
-    public MutableComponent parsePerMessageToMultiText(MyBaseComponent myBaseComponent) {
-        LiteralContents literalContents = new LiteralContents(myBaseComponent.getText());
+    public StringTextComponent parsePerMessageToMultiText(MyBaseComponent myBaseComponent) {
+        StringTextComponent stringTextComponent = new StringTextComponent(myBaseComponent.getText());
 
         ResourceLocation font = null;
         if (myBaseComponent.getFont() != null) {
@@ -28,16 +31,17 @@ public class ParseJsonToEvent {
         }
 
         Style style = Style.EMPTY.
-                withColor(TextColor.parseColor(myBaseComponent.getColor()))
+                withColor(Color.parseColor(myBaseComponent.getColor()))
                 .withBold(myBaseComponent.isBold())
                 .withItalic(myBaseComponent.isItalic())
                 .withUnderlined(myBaseComponent.isUnderlined())
-                .withStrikethrough(myBaseComponent.isStrikethrough())
-                .withObfuscated(myBaseComponent.isObfuscated())
+                .setStrikethrough(myBaseComponent.isStrikethrough())
+                .setObfuscated(myBaseComponent.isObfuscated())
                 .withInsertion(myBaseComponent.getInsertion())
                 .withFont(font);
 
-        if (myBaseComponent instanceof MyTextComponent myTextComponent) {
+        if (myBaseComponent instanceof MyTextComponent) {
+            MyTextComponent myTextComponent = (MyTextComponent) myBaseComponent;
             if (myTextComponent.getClickEvent() != null) {
                 ClickEvent.Action tempAction = ClickEvent.Action.getByName(myTextComponent.getClickEvent().getAction());
                 ClickEvent clickEvent = new ClickEvent(tempAction, myTextComponent.getClickEvent().getValue());
@@ -49,7 +53,7 @@ public class ParseJsonToEvent {
                 switch (myTextComponent.getHoverEvent().getAction()) {
                     case "show_text":
                         if (myTextComponent.getHoverEvent().getBaseComponentList() != null && myTextComponent.getHoverEvent().getBaseComponentList().size() > 0) {
-                            MutableComponent textComponent = parseMessages(myTextComponent.getHoverEvent().getBaseComponentList());
+                            StringTextComponent textComponent = parseMessages(myTextComponent.getHoverEvent().getBaseComponentList());
                             hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, textComponent);
                         }
                         break;
@@ -65,9 +69,8 @@ public class ParseJsonToEvent {
                 style = style.withHoverEvent(hoverEvent);
             }
         }
-        MutableComponent mutableComponent = MutableComponent.create(literalContents);
-        mutableComponent.setStyle(style);
+        stringTextComponent.setStyle(style);
 
-        return mutableComponent;
+        return stringTextComponent;
     }
 }

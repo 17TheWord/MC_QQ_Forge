@@ -73,13 +73,13 @@ public class Config {
                         }
                     }
                 } else {
-                    websocketUrlList = new ArrayList<>() {{
+                    websocketUrlList = new ArrayList<String>() {{
                         add("ws://127.0.0.1:8080/minecraft/ws");
                     }};
                     LOGGER.warn(ConfigConstantMessage.CONFIG_WEBSOCKET_URL_LIST_ERROR_USE_DEFAULT);
                 }
             } catch (ClassCastException e) {
-                websocketUrlList = new ArrayList<>() {{
+                websocketUrlList = new ArrayList<String>() {{
                     add("ws://127.0.0.1:8080/minecraft/ws");
                 }};
                 LOGGER.warn(ConfigConstantMessage.CONFIG_WEBSOCKET_URL_LIST_ERROR_USE_DEFAULT);
@@ -97,7 +97,7 @@ public class Config {
             enableReconnectMessage = false;
             reconnectMaxTimes = 5;
             reconnectInterval = 5000;
-            websocketUrlList = new ArrayList<>() {{
+            websocketUrlList = new ArrayList<String>() {{
                 add("ws://127.0.0.1:8080/minecraft/ws");
             }};
             sayWay = "说：";

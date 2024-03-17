@@ -5,10 +5,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,7 +34,7 @@ public class MCQQ {
 
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
+    public void onServerStarting(FMLServerStartingEvent event) {
         LOGGER.info(WebsocketConstantMessage.WEBSOCKET_RUNNING);
         minecraftServer = event.getServer();
         config.getWebsocketUrlList().forEach(url -> {
@@ -43,19 +43,19 @@ public class MCQQ {
                 wsClient.connect();
                 wsClientList.add(wsClient);
             } catch (URISyntaxException e) {
-                LOGGER.warn(WebsocketConstantMessage.WEBSOCKET_ERROR_URI_SYNTAX_ERROR.formatted(url));
+                LOGGER.warn(String.format(WebsocketConstantMessage.WEBSOCKET_ERROR_URI_SYNTAX_ERROR, url));
             }
         });
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
-    public void onServerStopping(ServerStoppingEvent event) {
+    public void onServerStopping(FMLServerStoppingEvent event) {
         wsClientList.forEach(
                 wsClient -> {
                     wsClient.close(
                             1000,
-                            WebsocketConstantMessage.WEBSOCKET_CLOSING.formatted(wsClient.getURI())
+                            String.format(WebsocketConstantMessage.WEBSOCKET_CLOSING, wsClient.getURI())
                     );
                     wsClient.getTimer().cancel();
                 }
