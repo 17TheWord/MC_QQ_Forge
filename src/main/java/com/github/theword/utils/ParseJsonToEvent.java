@@ -1,7 +1,12 @@
 package com.github.theword.utils;
 
 import com.github.theword.returnBody.returnModle.MyBaseComponent;
+import com.github.theword.returnBody.returnModle.MyHoverEntity;
+import com.github.theword.returnBody.returnModle.MyHoverItem;
 import com.github.theword.returnBody.returnModle.MyTextComponent;
+import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.StringTextComponent;
@@ -10,6 +15,8 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class ParseJsonToEvent {
     public StringTextComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
@@ -58,10 +65,19 @@ public class ParseJsonToEvent {
                         }
                         break;
                     case "show_item":
-//                            hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ITEM, new Item());
+                        MyHoverItem myHoverItem = myTextComponent.getHoverEvent().getItem();
+                        Item item = Item.byId(myHoverItem.getId());
+                        ItemStack itemStack = new ItemStack(item, myHoverItem.getCount());
+                        HoverEvent.ItemHover itemHover = new HoverEvent.ItemHover(itemStack);
+                        hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHover);
                         break;
                     case "show_entity":
-//                            hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new Entity());
+                        MyHoverEntity myHoverEntity = myTextComponent.getHoverEvent().getEntity();
+                        Optional<EntityType<?>> entityType = EntityType.byString(myHoverEntity.getType());
+                        if (entityType.isPresent()) {
+                            HoverEvent.EntityHover entityTooltipInfo = new HoverEvent.EntityHover(entityType.get(), UUID.randomUUID(), new StringTextComponent(myHoverEntity.getName()));
+                            hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, entityTooltipInfo);
+                        }
                         break;
                     default:
                         break;
