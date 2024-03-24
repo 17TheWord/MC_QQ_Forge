@@ -36,23 +36,23 @@ public class ParseJsonToEvent {
         if (myBaseComponent.getFont() != null) {
             font = new ResourceLocation(myBaseComponent.getFont());
         }
-
-        Style style = Style.EMPTY.
-                withColor(Color.parseColor(myBaseComponent.getColor()))
-                .withBold(myBaseComponent.isBold())
-                .withItalic(myBaseComponent.isItalic())
-                .withUnderlined(myBaseComponent.isUnderlined())
-                .setStrikethrough(myBaseComponent.isStrikethrough())
-                .setObfuscated(myBaseComponent.isObfuscated())
-                .withInsertion(myBaseComponent.getInsertion())
-                .withFont(font);
+        // TODO net.minecraft.util.text: no class found, fix!
+//        Style style = Style.EMPTY.
+//                withColor(Color.parseColor(myBaseComponent.getColor()))
+//                .withBold(myBaseComponent.isBold())
+//                .withItalic(myBaseComponent.isItalic())
+//                .withUnderlined(myBaseComponent.isUnderlined())
+//                .setStrikethrough(myBaseComponent.isStrikethrough())
+//                .setObfuscated(myBaseComponent.isObfuscated())
+//                .withInsertion(myBaseComponent.getInsertion())
+//                .withFont(font);
 
         if (myBaseComponent instanceof MyTextComponent) {
             MyTextComponent myTextComponent = (MyTextComponent) myBaseComponent;
             if (myTextComponent.getClickEvent() != null) {
                 ClickEvent.Action tempAction = ClickEvent.Action.getByName(myTextComponent.getClickEvent().getAction());
                 ClickEvent clickEvent = new ClickEvent(tempAction, myTextComponent.getClickEvent().getValue());
-                style = style.withClickEvent(clickEvent);
+//                style = style.withClickEvent(clickEvent);
             }
 
             if (myTextComponent.getHoverEvent() != null) {
@@ -82,10 +82,10 @@ public class ParseJsonToEvent {
                     default:
                         break;
                 }
-                style = style.withHoverEvent(hoverEvent);
+//                style = style.withHoverEvent(hoverEvent);
             }
         }
-        stringTextComponent.setStyle(style);
+//        stringTextComponent.setStyle(style);
 
         return stringTextComponent;
     }
