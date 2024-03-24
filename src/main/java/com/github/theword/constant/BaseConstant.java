@@ -1,5 +1,5 @@
 package com.github.theword.constant;
 
 public class BaseConstant {
-    static final String PREFIX = "[MC_QQ] ";
+    static final String PREFIX = "";
 }

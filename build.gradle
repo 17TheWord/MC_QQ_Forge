@@ -56,8 +56,9 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${project.lombok_version}")
     compileOnly("org.projectlombok:lombok:${project.lombok_version}")
 
-    implementation files("libs/Java-WebSocket-${java_websocket_version}.jar")
-    implementation files("libs/snakeyaml-${snakeyaml_version}.jar")
+    implementation "org.java-websocket:Java-WebSocket:${project.java_websocket_version}"
+    implementation "org.yaml:snakeyaml:${project.snakeyaml_version}"
+    implementation "org.slf4j:slf4j-api:${project.slf4j_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
@@ -76,9 +77,11 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 tasks.named('jar', Jar).configure {
-    from(project.zipTree("libs/snakeyaml-${snakeyaml_version}.jar"))
-    from(project.zipTree("libs/Java-WebSocket-${java_websocket_version}.jar"))
-
+    file("libs").eachFile { file ->
+        if (file.name.endsWith('.jar')) {
+            from(project.zipTree(file))
+        }
+    }
     manifest {
         attributes([
                 'Specification-Title'     : mod_id,
