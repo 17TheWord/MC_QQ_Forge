@@ -8,10 +8,10 @@ import com.google.gson.JsonElement;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
-import static com.github.theword.MCQQ.LOGGER;
 import static com.github.theword.MCQQ.minecraftServer;
+import static com.github.theword.utils.Tool.logger;
 
-public class HandleWebsocketMessage {
+public class HandleWebsocketMessageService implements HandleWebsocketMessage {
 
     private final ParseJsonToEvent parseJsonToEvent = new ParseJsonToEvent();
 
@@ -28,7 +28,7 @@ public class HandleWebsocketMessage {
                 }
                 break;
             default:
-                LOGGER.warn(WebsocketConstantMessage.WEBSOCKET_UNKNOWN_API + baseReturnBody.getApi());
+                logger.warn(WebsocketConstantMessage.WEBSOCKET_UNKNOWN_API + baseReturnBody.getApi());
                 break;
         }
     }

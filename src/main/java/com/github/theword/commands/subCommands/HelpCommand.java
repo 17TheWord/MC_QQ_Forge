@@ -6,8 +6,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
+import static com.github.theword.CommandTool.sendResultComponent;
 import static com.github.theword.commands.CommandManager.subCommandList;
-import static com.github.theword.utils.Tool.sendResultComponent;
 
 public class HelpCommand extends SubCommand {
     @Override

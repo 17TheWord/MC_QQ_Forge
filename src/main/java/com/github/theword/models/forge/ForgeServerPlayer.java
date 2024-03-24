@@ -1,15 +1,17 @@
-package com.github.theword.models;
+package com.github.theword.models.forge;
 
+import com.github.theword.eventModels.base.BasePlayer;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ForgeServerPlayer {
-    private String nickname;
+@EqualsAndHashCode(callSuper = true)
+public class ForgeServerPlayer extends BasePlayer {
     private String uuid;
     @SerializedName("display_name")
     private String displayName;

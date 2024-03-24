@@ -1,7 +1,7 @@
 package com.github.theword;
 
 
-import com.github.theword.models.*;
+import com.github.theword.models.forge.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -12,8 +12,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.Objects;
 
-import static com.github.theword.MCQQ.config;
-import static com.github.theword.utils.Tool.*;
+import static com.github.theword.utils.Tool.config;
+import static com.github.theword.utils.Tool.sendMessage;
 
 public class EventProcessor {
 
@@ -21,7 +21,7 @@ public class EventProcessor {
     public void onServerChat(ServerChatEvent event) {
         if (config.isEnableChatMessage()) {
             ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", getPlayer(event.getPlayer()), event.getMessage().getString());
-            sendMessage(getEventJson(forgeServerChatEvent));
+            sendMessage(forgeServerChatEvent);
         }
     }
 
@@ -29,7 +29,7 @@ public class EventProcessor {
     public void onPlayerJoin(PlayerLoggedInEvent event) {
         if (config.isEnableJoinMessage() && !event.isCanceled()) {
             ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(getPlayer((ServerPlayer) event.getEntity()));
-            sendMessage(getEventJson(forgePlayerLoggedInEvent));
+            sendMessage(forgePlayerLoggedInEvent);
         }
     }
 
@@ -37,7 +37,7 @@ public class EventProcessor {
     public void onPlayerQuit(PlayerLoggedOutEvent event) {
         if (config.isEnableQuitMessage() && !event.isCanceled()) {
             ForgePlayerLoggedOutEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedOutEvent(getPlayer((ServerPlayer) event.getEntity()));
-            sendMessage(getEventJson(forgePlayerLoggedInEvent));
+            sendMessage(forgePlayerLoggedInEvent);
         }
     }
 
@@ -50,7 +50,7 @@ public class EventProcessor {
                 if (!command.startsWith("l ") && !command.startsWith("login ") && !command.startsWith("register ") && !command.startsWith("reg ") && !command.startsWith("mcqq ")) {
                     ForgeServerPlayer player = getPlayer(Objects.requireNonNull(event.getParseResults().getContext().getSource().getPlayer()));
                     ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
-                    sendMessage(getEventJson(forgeCommandEvent));
+                    sendMessage(forgeCommandEvent);
                 }
             }
         }
@@ -62,8 +62,32 @@ public class EventProcessor {
             if (event.getEntity() instanceof ServerPlayer) {
                 ForgeServerPlayer player = getPlayer((ServerPlayer) event.getEntity());
                 ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, event.getSource().getLocalizedDeathMessage(event.getEntity()).getString());
-                sendMessage(getEventJson(forgeCommandEvent));
+                sendMessage(forgeCommandEvent);
             }
         }
+    }
+
+    ForgeServerPlayer getPlayer(ServerPlayer player) {
+        ForgeServerPlayer forgeServerPlayer = new ForgeServerPlayer();
+        forgeServerPlayer.setNickname(player.getName().getString());
+        forgeServerPlayer.setDisplayName(player.getDisplayName().getString());
+
+        forgeServerPlayer.setUuid(player.getUUID().toString());
+        forgeServerPlayer.setIpAddress(player.getIpAddress());
+        forgeServerPlayer.setLevel(player.getLevel().toString());
+        forgeServerPlayer.setSpeed(player.getSpeed());
+        forgeServerPlayer.setGameMode(player.gameMode.getGameModeForPlayer().toString());
+        forgeServerPlayer.setBlockX(player.getBlockX());
+        forgeServerPlayer.setBlockY(player.getBlockY());
+        forgeServerPlayer.setBlockZ(player.getBlockZ());
+
+        forgeServerPlayer.setSwimming(player.isSwimming());
+        forgeServerPlayer.setSleeping(player.isSleeping());
+        forgeServerPlayer.setBlocking(player.isBlocking());
+
+        forgeServerPlayer.setFlying(player.getAbilities().flying);
+        forgeServerPlayer.setFlyingSpeed(player.getAbilities().getFlyingSpeed());
+
+        return forgeServerPlayer;
     }
 }

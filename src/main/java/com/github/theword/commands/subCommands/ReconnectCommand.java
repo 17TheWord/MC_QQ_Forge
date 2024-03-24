@@ -9,8 +9,8 @@ import net.minecraft.commands.Commands;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.theword.MCQQ.wsClientList;
-import static com.github.theword.utils.Tool.sendResultComponent;
+import static com.github.theword.CommandTool.sendResultComponent;
+import static com.github.theword.utils.Tool.wsClientList;
 
 public class ReconnectCommand extends SubCommand {
     @Override

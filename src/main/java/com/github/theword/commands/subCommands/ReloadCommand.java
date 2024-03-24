@@ -1,20 +1,21 @@
 package com.github.theword.commands.subCommands;
 
-import com.github.theword.Config;
-import com.github.theword.WsClient;
 import com.github.theword.commands.SubCommand;
 import com.github.theword.constant.CommandConstantMessage;
 import com.github.theword.constant.WebsocketConstantMessage;
+import com.github.theword.utils.Config;
+import com.github.theword.websocket.WsClient;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.github.theword.MCQQ.config;
-import static com.github.theword.MCQQ.wsClientList;
-import static com.github.theword.utils.Tool.sendResultComponent;
+import static com.github.theword.CommandTool.sendResultComponent;
+import static com.github.theword.utils.Tool.config;
+import static com.github.theword.utils.Tool.wsClientList;
 
 public class ReloadCommand extends SubCommand {
 
@@ -54,7 +55,7 @@ public class ReloadCommand extends SubCommand {
             sendResultComponent(context, CommandConstantMessage.RELOAD_CLEAR_WEBSOCKET_CLIENT_LIST);
             config.getWebsocketUrlList().forEach(websocketUrl -> {
                 try {
-                    WsClient wsClient = new WsClient(websocketUrl);
+                    WsClient wsClient = new WsClient(new URI(websocketUrl));
                     wsClient.connect();
                     wsClientList.add(wsClient);
                 } catch (URISyntaxException e) {
